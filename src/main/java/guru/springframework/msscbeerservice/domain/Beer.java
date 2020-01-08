@@ -1,5 +1,6 @@
 package guru.springframework.msscbeerservice.domain;
 
+import guru.springframework.msscbeerservice.web.model.BeerStyle;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
@@ -35,7 +36,9 @@ public class Beer {
     private Timestamp lastModifiedDate;
 
     private String beerName;
-    private String beerStyle;
+
+    @Enumerated(EnumType.STRING)
+    private BeerStyle beerStyle;
 
     @Column(unique = true)
     private Long upc;
