@@ -1,5 +1,6 @@
 package guru.springframework.msscbeerservice.web.services;
 
+import guru.springframework.msscbeerservice.domain.Beer;
 import guru.springframework.msscbeerservice.web.model.BeerDto;
 
 import java.util.UUID;
@@ -9,9 +10,9 @@ import java.util.UUID;
  */
 public interface BeerService {
 
-    BeerDto getBeerById(UUID beerId);
+    Beer getBeerById(UUID beerId);
 
-    BeerDto saveNewBeer(BeerDto beerDto);
+    Beer saveNewBeer(Beer beer);
 
     void updateBeer(UUID beerId, BeerDto beerDto);
 
