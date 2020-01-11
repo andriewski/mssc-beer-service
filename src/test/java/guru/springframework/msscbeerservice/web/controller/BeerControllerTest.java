@@ -21,6 +21,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -64,6 +66,12 @@ class BeerControllerTest {
     @Test
     void getBeerById() throws Exception {
         Beer beer = beerMapper.beerDtoToBeer(getValidBeerDto());
+        beer.setCreatedDate(new Timestamp(new Date().getTime()));
+        beer.setLastModifiedDate(new Timestamp(new Date().getTime()));
+        beer.setVersion(1);
+        beer.setQuantityToBrew(100);
+
+        ConstrainedFields fields = new ConstrainedFields(BeerDto.class);
 
         given(beerService.getBeerById(any())).willReturn(beer);
 
@@ -75,15 +83,15 @@ class BeerControllerTest {
                                 parameterWithName("beerId").description("UUID of desired beer to get")
                         ),
                         responseFields(
-                                fieldWithPath("id").description("Id of Beer"),
-                                fieldWithPath("version").description("Beer version"),
-                                fieldWithPath("createdDate").description("The Date when beer was created"),
-                                fieldWithPath("lastModifiedDate").description("The last day when beer was updated"),
-                                fieldWithPath("beerName").description("Name of Beer"),
-                                fieldWithPath("beerStyle").description("Style of Beer"),
-                                fieldWithPath("upc").description("Upc of Beer"),
-                                fieldWithPath("price").description("Price of beer"),
-                                fieldWithPath("quantityOnHand").description("Quantity on hand")
+                                fields.withPath("id").description("Id of Beer"),
+                                fields.withPath("version").description("Beer version"),
+                                fields.withPath("createdDate").description("The Date when beer was created"),
+                                fields.withPath("lastModifiedDate").description("The last day when beer was updated"),
+                                fields.withPath("beerName").description("Name of Beer"),
+                                fields.withPath("beerStyle").description("Style of Beer"),
+                                fields.withPath("upc").description("Upc of Beer"),
+                                fields.withPath("price").description("Price of beer"),
+                                fields.withPath("quantityOnHand").description("Quantity on hand")
                         )
                 ));
     }
