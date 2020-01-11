@@ -1,6 +1,7 @@
 package guru.springframework.msscbeerservice.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import guru.springframework.msscbeerservice.bootstrap.BeerLoader;
 import guru.springframework.msscbeerservice.mappers.BeerMapper;
 import guru.springframework.msscbeerservice.repositories.BeerRepository;
 import guru.springframework.msscbeerservice.web.model.BeerDto;
@@ -99,6 +100,8 @@ class BeerControllerTest {
 
         ConstrainedFields fields = new ConstrainedFields(BeerDto.class);
 
+        given(beerService.saveNewBeer(any())).willReturn(beerDto);
+
         mockMvc.perform(post("/api/v1/beer")
                 .contentType(APPLICATION_JSON)
                 .content(beerDtoJson))
@@ -114,6 +117,17 @@ class BeerControllerTest {
                                 fields.withPath("upc").description("Upc of Beer"),
                                 fields.withPath("price").description("Price of beer"),
                                 fields.withPath("quantityOnHand").ignored()
+                        ),
+                        responseFields(
+                                fields.withPath("id").description("Id of Beer"),
+                                fields.withPath("version").description("Beer version"),
+                                fields.withPath("createdDate").description("The Date when beer was created"),
+                                fields.withPath("lastModifiedDate").description("The last day when beer was updated"),
+                                fields.withPath("beerName").description("Name of Beer"),
+                                fields.withPath("beerStyle").description("Style of Beer"),
+                                fields.withPath("upc").description("Upc of Beer"),
+                                fields.withPath("price").description("Price of beer"),
+                                fields.withPath("quantityOnHand").description("Quantity on hand")
                         )
                 ));
     }
@@ -181,7 +195,7 @@ class BeerControllerTest {
                 .beerName("My beer")
                 .beerStyle(BeerStyle.ALE)
                 .price(new BigDecimal("1.01"))
-                .upc(123123123123L)
+                .upc(BeerLoader.BEER_3_UPC)
                 .build();
     }
 
