@@ -1,7 +1,6 @@
 package guru.springframework.msscbeerservice.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import guru.springframework.msscbeerservice.domain.Beer;
 import guru.springframework.msscbeerservice.mappers.BeerMapper;
 import guru.springframework.msscbeerservice.repositories.BeerRepository;
 import guru.springframework.msscbeerservice.web.model.BeerDto;
@@ -21,8 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.util.Date;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -30,9 +28,7 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.snippet.Attributes.key;
@@ -65,11 +61,10 @@ class BeerControllerTest {
 
     @Test
     void getBeerById() throws Exception {
-        Beer beer = beerMapper.beerDtoToBeer(getValidBeerDto());
-        beer.setCreatedDate(new Timestamp(new Date().getTime()));
-        beer.setLastModifiedDate(new Timestamp(new Date().getTime()));
+        BeerDto beer = getValidBeerDto();
+        beer.setCreatedDate(OffsetDateTime.now());
+        beer.setLastModifiedDate(OffsetDateTime.now());
         beer.setVersion(1);
-        beer.setQuantityToBrew(100);
 
         ConstrainedFields fields = new ConstrainedFields(BeerDto.class);
 
@@ -132,10 +127,12 @@ class BeerControllerTest {
 
         ConstrainedFields fields = new ConstrainedFields(BeerDto.class);
 
+        given(beerService.updateBeer(any(), any())).willReturn(beerDto);
+
         mockMvc.perform(put("/api/v1/beer/{beerId}", id)
                 .contentType(APPLICATION_JSON)
                 .content(beerDtoJson))
-                .andExpect(status().isNoContent())
+                .andExpect(status().isAccepted())
                 .andDo(document("v1/beer-update",
                         pathParameters(
                                 parameterWithName("beerId").description("UUID of desired beer to update")
@@ -150,6 +147,17 @@ class BeerControllerTest {
                                 fields.withPath("upc").description("Upc of Beer"),
                                 fields.withPath("price").description("Price of beer"),
                                 fields.withPath("quantityOnHand").ignored()
+                        ),
+                        responseFields(
+                                fields.withPath("id").description("Id of Beer"),
+                                fields.withPath("version").description("Beer version"),
+                                fields.withPath("createdDate").description("The Date when beer was created"),
+                                fields.withPath("lastModifiedDate").description("The last day when beer was updated"),
+                                fields.withPath("beerName").description("Name of Beer"),
+                                fields.withPath("beerStyle").description("Style of Beer"),
+                                fields.withPath("upc").description("Upc of Beer"),
+                                fields.withPath("price").description("Price of beer"),
+                                fields.withPath("quantityOnHand").description("Quantity on hand")
                         )
                 ));
     }
