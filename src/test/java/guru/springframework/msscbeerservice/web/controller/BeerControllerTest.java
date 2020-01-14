@@ -101,6 +101,38 @@ class BeerControllerTest {
     }
 
     @Test
+    void getBeerByUpc() throws Exception {
+        BeerDto beer = getValidBeerDto();
+        beer.setCreatedDate(OffsetDateTime.now());
+        beer.setLastModifiedDate(OffsetDateTime.now());
+        beer.setVersion(1);
+
+        ConstrainedFields fields = new ConstrainedFields(BeerDto.class);
+
+        given(beerService.getBeerByUpc(any())).willReturn(beer);
+
+        mockMvc.perform(get("/api/v1/beer/upc/{upc}", beer.getUpc())
+                .accept(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("v1/beer-upc",
+                        pathParameters(
+                                parameterWithName("upc").description("Upc number of beer")
+                        ),
+                        responseFields(
+                                fields.withPath("id").description("Id of Beer"),
+                                fields.withPath("version").description("Beer version"),
+                                fields.withPath("createdDate").description("The Date when beer was created"),
+                                fields.withPath("lastModifiedDate").description("The last day when beer was updated"),
+                                fields.withPath("beerName").description("Name of Beer"),
+                                fields.withPath("beerStyle").description("Style of Beer"),
+                                fields.withPath("upc").description("Upc of Beer"),
+                                fields.withPath("price").description("Price of beer"),
+                                fields.withPath("quantityOnHand").ignored()
+                        )
+                ));
+    }
+
+    @Test
     void saveNewBeer() throws Exception {
         BeerDto beerDto = getValidBeerDto();
         beerDto.setId(null);

@@ -21,4 +21,6 @@ public interface BeerService {
     void deleteBeerById(UUID beerId);
 
     BeerPagedList getAllBeer(String beerName, BeerStyle beerStyle, PageRequest pageRequest, Boolean showInventoryOnHand);
+
+    BeerDto getBeerByUpc(String upc);
 }
