@@ -111,7 +111,7 @@ class BeerControllerTest {
 
         given(beerService.getBeerByUpc(any())).willReturn(beer);
 
-        mockMvc.perform(get("/api/v1/beer/upc/{upc}", beer.getUpc())
+        mockMvc.perform(get("/api/v1/beerUpc/{upc}", beer.getUpc())
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("v1/beer-upc",

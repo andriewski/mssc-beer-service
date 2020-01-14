@@ -15,20 +15,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/beer")
+@RequestMapping("/api/v1")
 @RestController
 public class BeerController {
 
     private final BeerService beerService;
 
-    @GetMapping("/{beerId}")
+    @GetMapping("/beer/{beerId}")
     public ResponseEntity<BeerDto> getBeerById(@PathVariable("beerId") UUID beerId,
                                                @RequestParam(value = "showInventoryOnHand", required = false,
                                                        defaultValue = "false") Boolean showInventoryOnHand) {
         return new ResponseEntity<>(beerService.getBeerById(beerId, showInventoryOnHand), HttpStatus.OK);
     }
 
-    @GetMapping("/upc/{upc}")
+    @GetMapping("/beerUpc/{upc}")
     public ResponseEntity<BeerDto> getBeerById(@PathVariable("upc") String upc) {
         return new ResponseEntity<>(beerService.getBeerByUpc(upc), HttpStatus.OK);
     }
@@ -38,12 +38,12 @@ public class BeerController {
         return new ResponseEntity<>(beerService.saveNewBeer(beerDto), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{beerId}")
+    @PutMapping("/beer/{beerId}")
     public ResponseEntity<BeerDto> updateBeerById(@PathVariable("beerId") UUID beerId, @Validated @RequestBody BeerDto beerDto) {
         return new ResponseEntity<>(beerService.updateBeer(beerId, beerDto), HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping("/{beerId}")
+    @DeleteMapping("/beer/{beerId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBeerById(@PathVariable("beerId") UUID beerId) {
         beerService.deleteBeerById(beerId);
