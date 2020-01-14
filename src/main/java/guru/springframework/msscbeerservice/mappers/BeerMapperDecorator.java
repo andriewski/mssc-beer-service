@@ -4,6 +4,7 @@ import guru.springframework.msscbeerservice.domain.Beer;
 import guru.springframework.msscbeerservice.services.clients.inventory.BeerInventoryService;
 import guru.springframework.msscbeerservice.web.model.BeerDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 public abstract class BeerMapperDecorator implements BeerMapper {
 
@@ -16,6 +17,7 @@ public abstract class BeerMapperDecorator implements BeerMapper {
     }
 
     @Autowired
+    @Qualifier("delegate")
     public void setDelegate(BeerMapper delegate) {
         this.delegate = delegate;
     }
