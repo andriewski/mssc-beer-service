@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.constraints.ConstraintDescriptions;
@@ -25,13 +26,13 @@ import java.util.UUID;
 
 import static guru.springframework.msscbeerservice.bootstrap.BeerLoader.BEER_3_UPC;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -57,6 +58,9 @@ class BeerControllerTest {
     @MockBean
     BeerRepository beerRepository;
 
+    @MockBean
+    RestTemplateBuilder restTemplateBuilder;
+
     @Autowired
     BeerMapper beerMapper;
 
@@ -69,14 +73,18 @@ class BeerControllerTest {
 
         ConstrainedFields fields = new ConstrainedFields(BeerDto.class);
 
-        given(beerService.getBeerById(any())).willReturn(beer);
+        given(beerService.getBeerById(any(), anyBoolean())).willReturn(beer);
 
         mockMvc.perform(get("/api/v1/beer/{beerId}", beer.getId())
+                .param("showInventoryOnHand", "false")
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("v1/beer-get",
                         pathParameters(
                                 parameterWithName("beerId").description("UUID of desired beer to get")
+                        ),
+                        requestParameters(
+                                parameterWithName("showInventoryOnHand").description("Show inventory on hand or not. Default = false")
                         ),
                         responseFields(
                                 fields.withPath("id").description("Id of Beer"),

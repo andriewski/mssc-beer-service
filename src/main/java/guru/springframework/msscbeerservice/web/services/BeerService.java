@@ -12,7 +12,7 @@ import java.util.UUID;
  */
 public interface BeerService {
 
-    BeerDto getBeerById(UUID beerId);
+    BeerDto getBeerById(UUID beerId, Boolean showInventoryOnHand);
 
     BeerDto saveNewBeer(BeerDto beer);
 
@@ -20,5 +20,5 @@ public interface BeerService {
 
     void deleteBeerById(UUID beerId);
 
-    BeerPagedList getAllBeer(String beerName, BeerStyle beerStyle, PageRequest pageRequest);
+    BeerPagedList getAllBeer(String beerName, BeerStyle beerStyle, PageRequest pageRequest, Boolean showInventoryOnHand);
 }
