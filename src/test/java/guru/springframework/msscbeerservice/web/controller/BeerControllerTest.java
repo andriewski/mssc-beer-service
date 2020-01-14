@@ -1,7 +1,6 @@
 package guru.springframework.msscbeerservice.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import guru.springframework.msscbeerservice.bootstrap.BeerLoader;
 import guru.springframework.msscbeerservice.mappers.BeerMapper;
 import guru.springframework.msscbeerservice.repositories.BeerRepository;
 import guru.springframework.msscbeerservice.web.model.BeerDto;
@@ -24,6 +23,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+import static guru.springframework.msscbeerservice.bootstrap.BeerLoader.BEER_3_UPC;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -195,7 +195,7 @@ class BeerControllerTest {
                 .beerName("My beer")
                 .beerStyle(BeerStyle.ALE)
                 .price(new BigDecimal("1.01"))
-                .upc(BeerLoader.BEER_3_UPC)
+                .upc(BEER_3_UPC)
                 .build();
     }
 

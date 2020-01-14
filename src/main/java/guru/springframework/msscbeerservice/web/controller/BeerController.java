@@ -1,9 +1,13 @@
 package guru.springframework.msscbeerservice.web.controller;
 
 import guru.springframework.msscbeerservice.web.model.BeerDto;
+import guru.springframework.msscbeerservice.web.model.BeerPagedList;
+import guru.springframework.msscbeerservice.web.model.BeerStyle;
 import guru.springframework.msscbeerservice.web.services.BeerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -36,5 +40,20 @@ public class BeerController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBeerById(@PathVariable("beerId") UUID beerId) {
         beerService.deleteBeerById(beerId);
+    }
+
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<BeerPagedList> listBeers(@RequestParam(value = "pageNumber", required = false) Integer pageNumber,
+                                                   @RequestParam(value = "pageSize", required = false) Integer pageSize,
+                                                   @RequestParam(value = "beerName", required = false) String beerName,
+                                                   @RequestParam(value = "beerStyle", required = false) BeerStyle beerStyle) {
+        int defaultPageNumber = 0;
+        int defaultPageSize = 25;
+        pageNumber = (pageNumber == null || pageNumber < 0) ? defaultPageNumber : pageNumber;
+        pageSize = (pageSize == null || pageSize < 0) ? defaultPageSize : pageSize;
+
+        BeerPagedList beerPagedList = beerService.getAllBeer(beerName, beerStyle, PageRequest.of(pageNumber, pageSize));
+
+        return new ResponseEntity<>(beerPagedList, HttpStatus.OK);
     }
 }
