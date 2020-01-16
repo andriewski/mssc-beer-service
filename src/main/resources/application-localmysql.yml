@@ -1,8 +1,8 @@
 spring:
     datasource:
-        username: beerservice
+        username: beer_service
         password: password
-        url: jdbc:mysql://127.0.0.1:3306/beerservice?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+        url: jdbc:mysql://127.0.0.1:3306/beer_service_db?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
     jpa:
         database: mysql
         hibernate:
