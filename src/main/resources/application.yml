@@ -1,0 +1,10 @@
+sfg.brewery.beer-inventory-service-host: http://localhost:8082
+spring:
+    datasource:
+        initialization-mode: EMBEDDED
+        url: jdbc:h2:mem:testdb;MODE=MYSQL
+    artemis:
+        user: artemis
+        password: simetraehcapa
+    cache.jcache.config: classpath:ehcache.xml
+    h2.console.enabled: true
