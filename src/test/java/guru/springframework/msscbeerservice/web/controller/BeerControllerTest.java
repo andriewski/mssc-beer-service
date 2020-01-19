@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.constraints.ConstraintDescriptions;
 import org.springframework.restdocs.payload.FieldDescriptor;
@@ -60,6 +61,9 @@ class BeerControllerTest {
 
     @MockBean
     RestTemplateBuilder restTemplateBuilder;
+
+    @MockBean
+    JmsTemplate jmsTemplate;
 
     @Autowired
     BeerMapper beerMapper;
