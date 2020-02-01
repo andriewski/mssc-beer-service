@@ -1,6 +1,6 @@
 package guru.springframework.msscbeerservice.domain;
 
-import guru.springframework.msscbeerservice.web.model.BeerStyle;
+import guru.sfg.brewery.model.BeerStyle;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
