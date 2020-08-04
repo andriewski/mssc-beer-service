@@ -1,13 +1,14 @@
 package guru.springframework.msscbeerservice.services.brewing;
 
-import guru.springframework.msscbeerservice.config.JmsConfig;
-import guru.springframework.msscbeerservice.domain.Beer;
+import guru.sfg.brewery.model.BeerDto;
 import guru.sfg.brewery.model.events.BrewBeerEvent;
 import guru.sfg.brewery.model.events.NewInventoryEvent;
+import guru.springframework.msscbeerservice.config.JmsConfig;
+import guru.springframework.msscbeerservice.domain.Beer;
 import guru.springframework.msscbeerservice.repositories.BeerRepository;
-import guru.sfg.brewery.model.BeerDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,8 @@ public class BrewBeerListener {
     public void listen(BrewBeerEvent event) {
         BeerDto beerDto = event.getBeerDto();
 
-        Beer beer = beerRepository.getOne(beerDto.getId());
+        Beer beer = beerRepository.findById(beerDto.getId())
+                .orElseThrow(() -> new ObjectNotFoundException(beerDto.getId(), "Beer"));
 
         //magic brewing process in air quotes
         int beerToBrew = beer.getQuantityToBrew() - beerDto.getQuantityOnHand();
