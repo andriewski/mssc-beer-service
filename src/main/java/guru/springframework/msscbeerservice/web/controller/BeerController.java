@@ -49,7 +49,7 @@ public class BeerController {
         beerService.deleteBeerById(beerId);
     }
 
-    @GetMapping(name = "/beer", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(path = "/beer", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<BeerPagedList> listBeers(@RequestParam(value = "pageNumber", required = false) Integer pageNumber,
                                                    @RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                    @RequestParam(value = "beerName", required = false) String beerName,
