@@ -23,6 +23,10 @@ spring:
         properties:
             hibernate:
                 dialect: org.hibernate.dialect.MySQL8Dialect
+    cloud:
+        discovery:
+#disable service discovery
+            enabled: false
 logging:
     level:
 #        org.hibernate:
@@ -30,3 +34,4 @@ logging:
 #            type.descriptor.sql.BasicBinder: TRACE
         com.zaxxer.hikari:
             HikariConfig: TRACE
+
