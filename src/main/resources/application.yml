@@ -6,6 +6,7 @@ spring:
     datasource:
         initialization-mode: EMBEDDED
         url: jdbc:h2:mem:testdb;MODE=MYSQL
+# default for the artemis mq docker
     artemis:
         user: artemis
         password: simetraehcapa
