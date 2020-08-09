@@ -1,4 +1,7 @@
-sfg.brewery.beer-inventory-service-host: http://localhost:8082
+sfg.brewery:
+    beer-inventory-service-host: http://localhost:8082
+    inventory-user: good
+    inventory-password: beer
 
 spring:
     application:
