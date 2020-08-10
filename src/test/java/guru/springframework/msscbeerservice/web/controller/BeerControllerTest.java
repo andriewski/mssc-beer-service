@@ -1,18 +1,20 @@
 package guru.springframework.msscbeerservice.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import guru.springframework.msscbeerservice.mappers.BeerMapper;
-import guru.springframework.msscbeerservice.repositories.BeerRepository;
 import guru.sfg.brewery.model.BeerDto;
 import guru.sfg.brewery.model.BeerStyle;
+import guru.springframework.msscbeerservice.mappers.BeerMapper;
+import guru.springframework.msscbeerservice.repositories.BeerRepository;
 import guru.springframework.msscbeerservice.web.services.BeerService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -59,7 +61,7 @@ class BeerControllerTest {
     @MockBean
     BeerRepository beerRepository;
 
-    @MockBean
+    @Autowired
     RestTemplateBuilder restTemplateBuilder;
 
     @MockBean
@@ -67,6 +69,15 @@ class BeerControllerTest {
 
     @Autowired
     BeerMapper beerMapper;
+
+    @TestConfiguration
+    public static class MockConfiguration {
+
+        @Bean
+        public RestTemplateBuilder restTemplateBuilder() {
+            return new RestTemplateBuilder();
+        }
+    }
 
     @Test
     void getBeerById() throws Exception {

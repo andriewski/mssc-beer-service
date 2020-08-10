@@ -17,6 +17,11 @@ spring:
     h2.console.enabled: true
     zipkin:
         enabled: false
+# Spring Data hangs when not set under Spring Boot 2.3.0
+    data:
+        jpa:
+            repositories:
+                bootstrap-mode: lazy
 
 logging:
     level:
