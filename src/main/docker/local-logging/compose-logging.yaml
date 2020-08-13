@@ -57,7 +57,7 @@ services:
         environment:
             SPRING_PROFILES_ACTIVE: local-discovery,localmysql
             EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://netflix:eureka@eureka:8761/eureka/
-            SPRING_ZIPKIN_BASEURL: http://zipkin
+            SPRING_ZIPKIN_BASEURL: http://zipkin:9411
             SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/beer_inventory_service_db?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
             SPRING_ARTEMIS_HOST: jms
             EUREKA_INSTANCE_PREFER_IP_ADDRESS: 'true'
@@ -91,7 +91,7 @@ services:
             SPRING_PROFILES_ACTIVE: local-discovery,localmysql
             EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://netflix:eureka@eureka:8761/eureka/
             EUREKA_INSTANCE_PREFER_IP_ADDRESS: 'true'
-            SPRING_ZIPKIN_BASEURL: http://zipkin
+            SPRING_ZIPKIN_BASEURL: http://zipkin:9411
             SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/beer_service_db?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
             SPRING_ARTEMIS_HOST: jms
         labels:
@@ -112,7 +112,7 @@ services:
             SPRING_PROFILES_ACTIVE: local-discovery,localmysql
             EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://netflix:eureka@eureka:8761/eureka/
             EUREKA_INSTANCE_PREFER_IP_ADDRESS: 'true'
-            SPRING_ZIPKIN_BASEURL: http://zipkin
+            SPRING_ZIPKIN_BASEURL: http://zipkin:9411
             SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/beer_order_service_db?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
             SPRING_ARTEMIS_HOST: jms
             SFG_BREWERY_BEER-SERVICE-HOST: http://beer-service:8080
