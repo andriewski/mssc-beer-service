@@ -33,12 +33,12 @@ services:
             - 9411:9411
 
     eureka:
-        image: plambir7/sfg-brewery-eureka
+        image: plambir7/mssc-brewery-eureka
         ports:
             - 8761:8761
 
     config:
-        image: plambir7/sfg-brewery-config
+        image: plambir7/mssc-config-server
         ports:
             - 8888:8888
         depends_on:
@@ -47,7 +47,7 @@ services:
             EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://netflix:eureka@eureka:8761/eureka/
             EUREKA_INSTANCE_PREFER_IP_ADDRESS: 'true'
     inventory:
-        image: plambir7/sfg-brewery-inventory-service
+        image: plambir7/mssc-beer-inventory-service
         ports:
             - 8082:8082
         depends_on:
@@ -67,7 +67,7 @@ services:
             decode_log_event_to_json_object: "true"
 
     inventory-failover:
-        image: plambir7/sfg-brewery-inventory-failover
+        image: plambir7/mssc-inventory-failover
         ports:
             - 8083:8083
         depends_on:
@@ -78,7 +78,7 @@ services:
             EUREKA_INSTANCE_PREFER_IP_ADDRESS: 'true'
 
     beer-service:
-        image: plambir7/sfg-brewery-beer-service
+        image: plambir7/mssc-beer-service
         ports:
             - 8080:8080
         depends_on:
@@ -99,7 +99,7 @@ services:
             decode_log_event_to_json_object: "true"
 
     order-service:
-        image: plambir7/sfg-brewery-order-service
+        image: plambir7/mssc-beer-order-service
         ports:
             - 8081:8081
         depends_on:
@@ -120,7 +120,7 @@ services:
             collect_logs_with_filebeat: "true"
             decode_log_event_to_json_object: "true"
     gateway:
-        image: plambir7/sfg-brewery-gateway
+        image: plambir7/mssc-brewery-gateway
         ports:
             - 9090:9090
         depends_on:
