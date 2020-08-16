@@ -1,0 +1,76 @@
+version: '3.8'
+services:
+    filebeat:
+        image: plambir7/sfg-filebeat
+        volumes:
+            - /var/lib/docker/containers:/var/lib/docker/containers:ro           # Docker logs
+            - /var/run/docker.sock:/var/run/docker.sock:ro                       # Additional information about containers
+        extra_hosts:
+            - "elasticsearch:142.93.103.60"
+        deploy:
+            mode: global
+            restart_policy:
+                condition: on-failure
+    inventory-service:
+        image: plambir7/mssc-beer-inventory-service #Set version if needed, keep in mind 'latest' tag will only be pulled the first time, updates will not automatically get pulled
+        ports:
+            - 8082:8082
+        environment:
+            SPRING_PROFILES_ACTIVE: digitalocean
+            SPRING_APPLICATION_JSON: '{"eureka":{"client":{"serviceUrl":{"defaultZone":"http://netflix:eureka@142.93.103.103:8761/eureka/"},"region":"default","register-with-eureka":true},"instance":{"preferIpAddress":false,"hostName":"inventory-service"}},"spring":{"cloud":{"config":{"discovery":{"enabled":true,"serviceId":"mssc-brewery-config"},"failFast":true,"username":"MyUserName","password":"MySuperSecretPassword"}}},"application":{"name":"inventory-service"}}'
+        restart: on-failure
+        labels:
+            collect_logs_with_filebeat: "true"
+            decode_log_event_to_json_object: "true"
+        deploy:
+            replicas: 2
+    inventory-failover:
+        image: plambir7/mssc-inventory-failover
+        ports:
+            - 8083:8083
+        environment:
+            SPRING_PROFILES_ACTIVE: digitalocean
+            SPRING_APPLICATION_JSON: '{"eureka":{"client":{"serviceUrl":{"defaultZone":"http://netflix:eureka@142.93.103.103:8761/eureka/"},"region":"default","register-with-eureka":true},"instance":{"preferIpAddress":false,"hostName":"inventory-failover"}},"spring":{"cloud":{"config":{"discovery":{"enabled":true,"serviceId":"mssc-brewery-config"},"failFast":true,"username":"MyUserName","password":"MySuperSecretPassword"}}},"application":{"name":"inventory-failover"}}'
+        deploy:
+            replicas: 2
+    beer-service:
+        image: plambir7/mssc-beer-service
+        ports:
+            - 8080:8080
+        restart: on-failure
+        environment:
+            SPRING_PROFILES_ACTIVE: digitalocean
+            SPRING_APPLICATION_JSON: '{"eureka":{"client":{"serviceUrl":{"defaultZone":"http://netflix:eureka@142.93.103.103:8761/eureka/"},"region":"default","register-with-eureka":true},"instance":{"preferIpAddress":false,"hostName":"beer-service"}},"spring":{"cloud":{"config":{"discovery":{"enabled":true,"serviceId":"mssc-brewery-config"},"failFast":true,"username":"MyUserName","password":"MySuperSecretPassword"}}},"application":{"name":"beer-service"}}'
+        labels:
+            collect_logs_with_filebeat: "true"
+            decode_log_event_to_json_object: "true"
+        deploy:
+            replicas: 2
+    order-service:
+        image: plambir7/mssc-beer-order-service
+        ports:
+            - 8081:8081
+        restart: on-failure
+        environment:
+            SPRING_PROFILES_ACTIVE: digitalocean
+            SPRING_APPLICATION_JSON: '{"eureka":{"client":{"serviceUrl":{"defaultZone":"http://netflix:eureka@142.93.103.103:8761/eureka/"},"region":"default","register-with-eureka":true},"instance":{"preferIpAddress":false,"hostName":"order-service"}},"spring":{"cloud":{"config":{"discovery":{"enabled":true,"serviceId":"mssc-brewery-config"},"failFast":true,"username":"MyUserName","password":"MySuperSecretPassword"}}},"application":{"name":"order-service"}}'
+            SFG_BREWERY_BEER-SERVICE-HOST: http://beer-service:8080
+        labels:
+            collect_logs_with_filebeat: "true"
+            decode_log_event_to_json_object: "true"
+        deploy:
+            replicas: 2
+    gateway:
+        image: plambir7/mssc-brewery-gateway
+        ports:
+            - 9090:9090
+        restart: on-failure
+        environment:
+            SPRING_PROFILES_ACTIVE: digitalocean
+            SPRING_APPLICATION_JSON: '{"eureka":{"client":{"serviceUrl":{"defaultZone":"http://netflix:eureka@142.93.103.103:8761/eureka/"},"region":"default","register-with-eureka":false},"instance":{"preferIpAddress":true}}}'
+            SPRING_ZIPKIN_BASEURL: http://206.189.178.213:9411
+        labels:
+            collect_logs_with_filebeat: "true"
+            decode_log_event_to_json_object: "true"
+        deploy:
+            replicas: 2

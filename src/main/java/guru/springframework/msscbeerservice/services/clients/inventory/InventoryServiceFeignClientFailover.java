@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.UUID;
 
-@Profile("local-discovery")
+@Profile({"local-discovery", "digitalocean"})
 @Component
 @RequiredArgsConstructor
 public class InventoryServiceFeignClientFailover implements InventoryServiceFeignClient {
